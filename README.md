@@ -1,12 +1,12 @@
 # galaxytools
 
 
-Collection of Galaxy tool wrappers maintained and developed by [ELIXIR Belgium](https://www.elixir-belgium.org/).
+Collection of Galaxy tool wrappers maintained and developed by [ELIXIR Belgium](https://www.elixir-belgium.org/) and [VIB Data Core](https://datacore.sites.vib.be/en).
 
 
-## General guide on coverting a Python tool into a Galaxy wrapper
+## General guide on converting a Python tool into a Galaxy wrapper
 
-WIP: example with protein_calculator:
+Example with protein_calculator:
 
 - Create a virtual env for your tool, containing Planemo
 
@@ -21,7 +21,7 @@ pip install planemo
 planemo tool_init --id 'protein_calculator' --name 'Protein Calculator from the VIB Protein Core'
 ``` 
 
-- Initialise tool wrapper
+- Initialize tool wrapper
 ```sh
 planemo tool_init --force \
                     --id 'protein_calculator' \
@@ -38,4 +38,4 @@ planemo tool_init --force \
 
 - Write wrapper and include tests. Test locally with `planemo t` and graphically with `planemo s`.
 
-- Merge to main and test on https://test.usegalaxy.be.  
+- Merge to main and test on https://test.usegalaxy.be. See changes and comments made in https://github.com/usegalaxy-be/infrastructure-playbook/pull/481 how to set this up. 
