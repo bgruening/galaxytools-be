@@ -33,10 +33,22 @@ python3 '$__tool_directory__/scripts/build_query_json.py'
         #if str($advanced.num_diffusion_samples)# $advanced.num_diffusion_samples #else# 5 #end if#
         2>&1
 #else
+    ## Resolve the OpenFold3 runner config. Prefer an admin-provided runner.yml
+    ## staged in the model/param cache; otherwise write an env-tunable default
+    ## into the job dir so the run always has a valid runner config.
+    && if [ -f "\${OPENFOLD_CACHE%/}/runner.yml" ]; then
+        RUNNER="\${OPENFOLD_CACHE%/}/runner.yml";
+        echo "[INFO] Using admin runner config: \$RUNNER";
+    else
+        printf 'model_update:\n  presets:\n    - "predict"\n    - "low_mem"\n  custom:\n    settings:\n      memory:\n        eval:\n          use_cueq_triangle_kernels: %s\n          use_deepspeed_evo_attention: %s\n' "\${OF3_USE_CUEQ:-false}" "\${OF3_USE_DEEPSPEED:-false}" > runner.yml;
+        RUNNER=runner.yml;
+        echo "[INFO] No admin runner config found; wrote default: \$RUNNER";
+    fi
     && run_openfold predict
         --query-json query.json
         --output-dir output
         --use-msa-server $msa_server
+        --runner-yaml "\$RUNNER"
         #if str($advanced.num_diffusion_samples)
             --num-diffusion-samples $advanced.num_diffusion_samples
         #end if
